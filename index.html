@@ -1,0 +1,30 @@
+<!-- 1. 喚醒原生相機鏡頭 -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+
+<button onclick="document.getElementById('cameraInput').click()" class="scan-btn">
+  📷 對準鳥類拍照辨識
+</button>
+
+<script>
+  const cameraInput = document.getElementById('cameraInput');
+
+  cameraInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 檢查瀏覽器是否支援檔案分享至系統應用（Android / iOS 皆支援）
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: '鳥類辨識',
+          text: '請使用 Google 智慧鏡頭或其他工具分析此鳥類'
+        });
+      } catch (err) {
+        console.log('使用者取消分享或未選取應用');
+      }
+    } else {
+      alert('您的瀏覽器不支援系統分享，建議長按圖片後選取「使用 Google 搜尋圖片」');
+    }
+  });
+</script>
